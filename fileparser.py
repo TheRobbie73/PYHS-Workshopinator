@@ -3,12 +3,14 @@ import numpy as np
 import pathlib as pl
 import os
 
-def main() -> list[dict]:
+def main() -> dict:
+    data_list = []
+    data_min = 0
+    data_max = 0
+
     file_path = pl.Path(__file__).absolute().parent/"read.rad"
     if not file_path.exists(): raise Exception("RAD file cannot be found! Make sure the file is labelled 'read.rad'")
     with open(file_path, "r") as file:
-        data_list = []
-
         for i, line in enumerate(file):
             line.rstrip()
             if i == 0:
@@ -16,9 +18,20 @@ def main() -> list[dict]:
                 pass
             elif i % 2 == 0:
                 # data line
-                data_list.append(parse_data_line(line))
+                data_dict = parse_data_line(line)
+                data_list.append(data_dict)
 
-    return data_list
+                for data in data_dict["data_points"]:
+                    data_min = min(data_min, data)
+                    data_max = max(data_max, data)
+
+    data_meta = {
+        "data_list" : data_list,
+        "data_min"  : data_min,
+        "data_max"  : data_max
+    }
+
+    return data_meta
 
 #todo: 
 # instead of return data_list, return data_meta: dict
@@ -76,15 +89,18 @@ def render_all(data_list: list[dict], freq: int, surf: pg.surface.Surface) -> pg
     
     return surf
 
-def graph_all(data_list: list[dict], freq: int, surf: pg.surface.Surface) -> pg.surface.Surface:
+def graph_all(data_meta: dict, data_range: tuple[float] | None, freq: int, surf: pg.surface.Surface) -> pg.surface.Surface:
     surf_size = surf.get_size()
-    intensities = [data_dict["data_points"][freq] for data_dict in data_list]
-    data_range = (min(intensities), max(intensities))
+
+    #intensities = [data_dict["data_points"][freq] for data_dict in data_meta["data_list"]]
+    #if data_range == None: data_range = (min(intensities), max(intensities))
+
+    if data_range == None: data_range = (data_meta["data_min"], data_meta["data_max"])
 
     pos_list = []
-    for i, data_dict in enumerate(data_list):
+    for i, data_dict in enumerate(data_meta["data_list"]):
         pos = (
-            int(i*surf_size[0]/(len(data_list) - 1)),
+            int(i*surf_size[0]/(len(data_meta["data_list"]) - 1)),
             surf_size[1] - int((data_dict["data_points"][freq] - data_range[0])*surf_size[1]/(data_range[1] - data_range[0]))
         )
         pos_list.append(pos)

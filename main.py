@@ -9,7 +9,7 @@ class Main():
         self.clock = pg.time.Clock()
         self.quit = False
 
-        self.data_list = fileparser.main()
+        self.data_meta = fileparser.main()
         self.test = 0
         
         self.graph = pg.surface.Surface((940, 470))
@@ -40,7 +40,7 @@ class Main():
         freq = self.slider.value
 
         self.graph.fill("#000000")
-        self.graph = fileparser.graph_all(self.data_list, freq, self.graph)
+        self.graph = fileparser.graph_all(self.data_meta, None, freq, self.graph)
         
     def render(self):
         self.screen.fill("#B744B8")
