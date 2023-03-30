@@ -5,8 +5,8 @@ import os
 
 def main() -> dict:
     data_list = []
-    data_min = 0
-    data_max = 0
+    data_min = 0.0
+    data_max = 0.0
 
     file_path = pl.Path(__file__).absolute().parent/"read.rad"
     if not file_path.exists(): raise Exception("RAD file cannot be found! Make sure the file is labelled 'read.rad'")
@@ -24,6 +24,9 @@ def main() -> dict:
                 for data in data_dict["data_points"]:
                     data_min = min(data_min, data)
                     data_max = max(data_max, data)
+    
+    # remove first three measurements
+    data_list = data_list[3:]
 
     data_meta = {
         "data_list" : data_list,

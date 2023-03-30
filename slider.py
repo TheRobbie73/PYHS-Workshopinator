@@ -6,20 +6,15 @@ class Slider():
     def __init__(
         self,
         rect: pygame.rect.Rect,
-        range: tuple[float, float],
-        label: str
+        range: tuple[float, float]
     ):
         self.rect = rect
         self.range = range
-        self.label = label
 
         self.value = range[0]
         self.state: int = 0
         self.alt_value: str = ""
-        self.alt_label: str = ""
         self.hover: bool = False
-
-        self.has_label = True
 
         self.adjust_rect()
     
@@ -31,7 +26,6 @@ class Slider():
         self.hover = self.rect.collidepoint(mouse_pos)
         if self.state == 1: self.pos_to_value(mouse_pos)
         self.clamp()
-        self.set_label()
     
     def render(self, screen: pygame.surface.Surface):
         ratio = (self.rect.width - SLIDER_WIDTH) / (self.range[1] - self.range[0])
@@ -87,12 +81,6 @@ class Slider():
             self.value = self.range[1]
         if self.value < self.range[0]:
             self.value = self.range[0]
-    
-    def set_label(self):
-        if self.state == 2:
-            self.alt_label = f"{self.label}: {self.alt_value}"
-        else:
-            self.alt_label = f"{self.label}: {round(self.value, 2)}"
     
     def check_input(self):
         try:
