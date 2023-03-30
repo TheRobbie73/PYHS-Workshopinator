@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 import fileparser
+import slider
 
 class Main():
     def __init__(self):
@@ -10,6 +11,14 @@ class Main():
 
         self.data_list = fileparser.main()
         self.test = 0
+        
+        self.graph = pg.surface.Surface((940, 470))
+
+        self.slider = slider.IntSlider(
+            pg.rect.Rect((10, 490), (293, 10)),
+            (0, 155),
+            "freq"
+        )
         
 
     def main(self):
@@ -23,16 +32,21 @@ class Main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit = True
+            self.slider.event(event)
     
     def update(self):
-        self.surface = pg.surface.Surface((1880, 470))
-        self.surface.fill("#000000")
-        self.surface = fileparser.render_all(self.data_list, 78, self.surface)
+        mouse_pos = pg.mouse.get_pos()
+        self.slider.update(mouse_pos)
+        freq = self.slider.value
 
+        self.graph.fill("#000000")
+        self.graph = fileparser.graph_all(self.data_list, freq, self.graph)
+        
     def render(self):
         self.screen.fill("#B744B8")
 
-        self.screen.blit(self.surface, (-940, 10))
+        self.screen.blit(self.graph, (10, 10))
+        self.slider.render(self.screen)
 
         pg.display.flip()
 
