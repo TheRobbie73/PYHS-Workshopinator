@@ -20,7 +20,7 @@ class Main():
 
         self.slider = slider.IntSlider(
             pg.rect.Rect((10, 490), (293, 10)),
-            (0, 155)
+            (0, self.data_meta["data_list"][0]["freq_num"] - 1)
         )
         
 
