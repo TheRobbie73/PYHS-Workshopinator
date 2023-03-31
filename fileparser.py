@@ -25,8 +25,11 @@ def main() -> dict:
                     data_min = min(data_min, data)
                     data_max = max(data_max, data)
     
+    # todo: remove lines based on comment above said line
     # remove first three measurements
     data_list = data_list[3:]
+    # remove last measurement
+    # data_list = data_list.pop()
 
     data_meta = {
         "data_list" : data_list,
@@ -103,7 +106,7 @@ def graph_all(data_meta: dict, data_range: tuple[float] | None, freq: int, surf:
     pos_list = []
     for i, data_dict in enumerate(data_meta["data_list"]):
         pos = (
-            int(i*surf_size[0]/(len(data_meta["data_list"]) - 1)),
+            int((data_dict["rot_offset"][0] + 30.0)*surf_size[0]/60.0),
             surf_size[1] - int((data_dict["data_points"][freq] - data_range[0])*surf_size[1]/(data_range[1] - data_range[0]))
         )
         pos_list.append(pos)
