@@ -11,6 +11,16 @@ def main() -> dict:
     file_path = pl.Path(__file__).absolute().parent/"read.rad"
     if not file_path.exists(): raise Exception("RAD file cannot be found! Make sure the file is labelled 'read.rad'")
     with open(file_path, "r") as file:
+        #station_rot = file.readline()
+        #while True:
+        #    line_comment = file.readline()
+        #    line_data = file.readline()
+
+        #    break
+
+
+
+
         for i, line in enumerate(file):
             line.rstrip()
             if i == 0:
@@ -29,7 +39,7 @@ def main() -> dict:
     # remove first three measurements
     data_list = data_list[3:]
     # remove last measurement
-    # data_list = data_list.pop()
+    data_list = data_list[:-1]
 
     data_meta = {
         "data_list" : data_list,
